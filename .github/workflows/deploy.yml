@@ -1,4 +1,4 @@
-name: Deploy Docker Application
+name: Deploy Docker Application - Test
 
 on:
   push:
