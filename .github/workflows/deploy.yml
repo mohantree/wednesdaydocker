@@ -50,6 +50,7 @@ jobs:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
           INSTANCE_ID: ${{ secrets.PRIVATE_EC2_INSTANCE_ID }}
+
         run: |
 
           echo "Deploying image:"
@@ -60,11 +61,11 @@ jobs:
             --arg registry "$REGISTRY" \
             --arg image "$IMAGE" \
             '[
-              "aws ecr get-login-password --region \($region) | docker login --username AWS --password-stdin \($registry)",
-              "docker pull \($image)",
-              "docker stop docker-private-app || true",
-              "docker rm docker-private-app || true",
-              "docker run -d --name docker-private-app -p 8080:8080 --restart unless-stopped \($image)"
+              "aws ecr get-login-password --region \($region) | sudo docker login --username AWS --password-stdin \($registry)",
+              "sudo docker pull \($image)",
+              "sudo docker stop docker-private-app || true",
+              "sudo docker rm docker-private-app || true",
+              "sudo docker run -d --name docker-private-app -p 8080:8080 --restart unless-stopped \($image)"
             ]')
 
           COMMAND_ID=$(aws ssm send-command \
